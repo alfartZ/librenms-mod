@@ -170,6 +170,7 @@ Route::prefix('v0')->namespace('\App\Api\Controllers')->group(function () {
 
     Route::get('inventory/{hostname}', 'LegacyApiController@get_inventory')->name('get_inventory');
     Route::get('inventory/{hostname}/all', 'LegacyApiController@get_inventory_for_device')->name('get_inventory_for_device');
+    Route::get('get_raw', 'LegacyApiController@get_node_edge')->name('get_node_edge');
 
     // Route not found
     Route::any('/{path?}', 'LegacyApiController@api_not_found')->where('path', '.*');
