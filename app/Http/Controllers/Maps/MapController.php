@@ -237,6 +237,7 @@ class MapController extends Controller
             $sql_array = array_merge($sql_array, $device_ids, $device_ids);
         }
 
+        $join_sql = '';
         $devices_by_id = [];
         $links = [];
         $link_assoc_seen = [];
