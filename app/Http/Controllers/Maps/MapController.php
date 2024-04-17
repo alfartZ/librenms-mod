@@ -212,6 +212,31 @@ class MapController extends Controller
         return $interface;
     }
 
+    /**
+     * Fetches the first call from the first row returned by the query
+     *
+     * @deprecated Please use Eloquent instead; https://laravel.com/docs/eloquent
+     * @see https://laravel.com/docs/eloquent
+     */
+    function dbFetchCell($sql, $parameters = [])
+    {
+        global $PDO_FETCH_ASSOC;
+
+        try {
+            $PDO_FETCH_ASSOC = true;
+            $row = Eloquent::DB()->selectOne($sql, (array) $parameters);
+            if ($row) {
+                return reset($row);
+                // shift first field off first row
+            }
+        } catch (PDOException $pdoe) {
+            dbHandleException(new QueryException('dbFacile', $sql, $parameters, $pdoe));
+        } finally {
+            $PDO_FETCH_ASSOC = false;
+        }
+
+        return null;
+    }//end dbFetchCell()
 
     protected function get_raw_topology()
     {

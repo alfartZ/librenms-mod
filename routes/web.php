@@ -90,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('custom/{map}/data', [CustomMapDataController::class, 'save'])->name('maps.custom.data.save');
     });
     Route::get('maps/devicedependency', [DeviceDependencyController::class, 'dependencyMap']);
+    
     Route::get('get_topo_raw', [DeviceDependencyController::class, 'get_raw_topology']);
 
     // dashboard
