@@ -25,12 +25,12 @@
 
 namespace App\Http\Controllers\Ajax;
 
+use App\Http\Controllers\Controller;
 use LibreNMS\Config;
 use LibreNMS\Util\Number;
 
 class NodeEdgeTopology extends Controller
 {
-
     public function get_raw_topo()
     {
         $highlight_node = $vars['highlight_node'] ?? 0;

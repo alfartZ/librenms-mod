@@ -90,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('custom/{map}/data', [CustomMapDataController::class, 'save'])->name('maps.custom.data.save');
     });
     Route::get('maps/devicedependency', [DeviceDependencyController::class, 'dependencyMap']);
+    Route::get('get_topo_raw', [DeviceDependencyController::class, 'get_raw_topology']);
 
     // dashboard
     Route::resource('dashboard', 'DashboardController')->except(['create', 'edit']);
@@ -163,7 +164,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('netcmd', 'NetCommand@run');
             Route::post('ripe/raw', 'RipeNccApiController@raw');
             Route::get('snmp/capabilities', 'SnmpCapabilities')->name('snmp.capabilities');
-            
             Route::get('get_topo_raw', 'NodeEdgeTopology@get_raw_topo');
         });
 
