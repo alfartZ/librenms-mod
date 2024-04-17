@@ -30,6 +30,7 @@ use LibreNMS\Config;
 use LibreNMS\Util\Number;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Permissions;
+use App\Facades\DeviceCache;
 
 class MapController extends Controller
 {
@@ -97,6 +98,120 @@ class MapController extends Controller
         return $device_style;
     }
 
+    /**
+     * Fetches all of the rows (associatively) from the last performed query.
+     * Most other retrieval functions build off this
+     *
+     * @deprecated Please use Eloquent instead; https://laravel.com/docs/eloquent
+     * @see https://laravel.com/docs/eloquent
+     */
+    protected function dbFetchRows($sql, $parameters = [])
+    {
+        global $PDO_FETCH_ASSOC;
+
+        try {
+            $PDO_FETCH_ASSOC = true;
+            $rows = Eloquent::DB()->select($sql, (array) $parameters);
+
+            return $rows;
+        } catch (PDOException $pdoe) {
+            dbHandleException(new QueryException('dbFacile', $sql, $parameters, $pdoe));
+        } finally {
+            $PDO_FETCH_ASSOC = false;
+        }
+
+        return [];
+    }//end dbFetchRows()
+
+    protected function shorthost($hostname, $len = 12)
+    {
+        // IP addresses should not be shortened
+        if (filter_var($hostname, FILTER_VALIDATE_IP)) {
+            return $hostname;
+        }
+        $len = Config::get('shorthost_target_length', $len);
+    
+        $parts = explode('.', $hostname);
+        $shorthost = $parts[0];
+        $i = 1;
+        while ($i < count($parts) && strlen($shorthost . '.' . $parts[$i]) < $len) {
+            $shorthost = $shorthost . '.' . $parts[$i];
+            $i++;
+        }
+    
+        return $shorthost;
+    }
+
+    protected function generate_device_link($device, $text = null, $vars = [], $start = 0, $end = 0, $escape_text = 1, $overlib = 1)
+    {
+        $deviceModel = DeviceCache::get((int) $device['device_id']);
+
+        return \LibreNMS\Util\Url::deviceLink($deviceModel, $text, $vars, $start, $end, $escape_text, $overlib);
+    }
+
+    /**
+     * Clean port values for html display
+     * Add label to the port array (usually one of ifAlias, ifName, ifDescr)
+     *
+     * @param  array  $interface
+     * @param  null|array  $device
+     * @return mixed
+     */
+    protected function cleanPort($interface, $device = null)
+    {
+        if (! $interface) {
+            return $interface;
+        }
+
+        $interface['ifAlias'] = htmlentities($interface['ifAlias'] ?? '');
+        $interface['ifName'] = htmlentities($interface['ifName'] ?? '');
+        $interface['ifDescr'] = htmlentities($interface['ifDescr'] ?? '');
+
+        if (! $device) {
+            $device = device_by_id_cache($interface['device_id']);
+        }
+
+        $os = strtolower($device['os']);
+
+        if (Config::get("os.$os.ifname")) {
+            $interface['label'] = $interface['ifName'];
+
+            if ($interface['ifName'] == '') {
+                $interface['label'] = $interface['ifDescr'];
+            }
+        } elseif (Config::get("os.$os.ifalias")) {
+            $interface['label'] = $interface['ifAlias'];
+        } else {
+            $interface['label'] = $interface['ifDescr'];
+            if (Config::get("os.$os.ifindex")) {
+                $interface['label'] = $interface['label'] . ' ' . $interface['ifIndex'];
+            }
+        }
+
+        if ($device['os'] == 'speedtouch') {
+            [$interface['label']] = explode('thomson', $interface['label']);
+        }
+
+        if (is_array(Config::get('rewrite_if'))) {
+            foreach (Config::get('rewrite_if') as $src => $val) {
+                if (stristr($interface['label'], $src)) {
+                    $interface['label'] = $val;
+                }
+            }
+        }
+
+        if (is_array(Config::get('rewrite_if_regexp'))) {
+            foreach (Config::get('rewrite_if_regexp') as $reg => $val) {
+                if (preg_match($reg . 'i', $interface['label'])) {
+                    $interface['label'] = preg_replace($reg . 'i', $val, $interface['label']);
+                }
+            }
+        }
+
+        return $interface;
+    }
+
+
     protected function get_raw_topology()
     {
         $highlight_node = $vars['highlight_node'] ?? 0;
@@ -132,7 +247,7 @@ class MapController extends Controller
         $group_name = '';
         $where = '';
         if (is_numeric($group) && $group) {
-            $group_name = dbFetchCell('SELECT `name` from `device_groups` WHERE `id` = ?', [$group]);
+            $group_name = $this->dbFetchCell('SELECT `name` from `device_groups` WHERE `id` = ?', [$group]);
             $where .= ' AND D1.device_id IN (SELECT `device_id` FROM `device_group_device` WHERE `device_group_id` = ?)';
             $sql_array[] = $group;
             $where .= ' OR D2.device_id IN (SELECT `device_id` FROM `device_group_device` WHERE `device_group_id` = ?)';
@@ -140,7 +255,7 @@ class MapController extends Controller
         }
 
         if (in_array('mac', Config::get('network_map_items'))) {
-            $ports = dbFetchRows("SELECT
+            $ports = $this->dbFetchRows("SELECT
                                     `D1`.`status` AS `local_status`,
                                     `D1`.`device_id` AS `local_device_id`,
                                     `D1`.`disabled` AS `local_disabled`,
@@ -191,7 +306,7 @@ class MapController extends Controller
         }
 
         if (in_array('xdp', Config::get('network_map_items'))) {
-            $devices = dbFetchRows("SELECT
+            $devices = $this->dbFetchRows("SELECT
                                     `D1`.`status` AS `local_status`,
                                     `D1`.`device_id` AS `local_device_id`,
                                     `D1`.`os` AS `local_os`,
@@ -326,8 +441,8 @@ class MapController extends Controller
             if (! array_key_exists($local_device_id, $devices_by_id)) {
                 $devices_by_id[$local_device_id] = [
                     'id'=>$local_device_id,
-                    'label'=>shorthost(format_hostname($local_device), 1),
-                    'title'=>generate_device_link($local_device, '', [], '', '', '', 0),
+                    'label'=>$this->shorthost(format_hostname($local_device), 1),
+                    'title'=>$this->generate_device_link($local_device, '', [], '', '', '', 0),
                     'shape'=>'box',
                 ];
                 if ($items['local_disabled'] != '0') {
@@ -343,7 +458,7 @@ class MapController extends Controller
 
             $remote_device_id = $items['remote_device_id'];
             if (! array_key_exists($remote_device_id, $devices_by_id)) {
-                $devices_by_id[$remote_device_id] = ['id'=>$remote_device_id, 'label'=>shorthost(format_hostname($remote_device), 1), 'title'=>generate_device_link($remote_device, '', [], '', '', '', 0), 'shape'=>'box'];
+                $devices_by_id[$remote_device_id] = ['id'=>$remote_device_id, 'label'=>$this->shorthost(format_hostname($remote_device), 1), 'title'=>generate_device_link($remote_device, '', [], '', '', '', 0), 'shape'=>'box'];
                 if ($items['remote_disabled'] != '0') {
                     $devices_by_id[$remote_device_id] = array_merge($devices_by_id[$remote_device_id], $node_disabled_style);
                 } elseif ($items['remote_status'] == '0') {
@@ -406,14 +521,14 @@ class MapController extends Controller
                 (! in_array('mac', Config::get('network_map_items')) ||
                 (! array_key_exists($device_id1, $device_assoc_seen) &&
                 ! array_key_exists($device_id2, $device_assoc_seen)))) {
-                $local_port = cleanPort($local_port);
-                $remote_port = cleanPort($remote_port);
+                $local_port = $this->cleanPort($local_port);
+                $remote_port = $this->cleanPort($remote_port);
                 $links[] = array_merge(
                     [
                         'from'=>$items['local_device_id'],
                         'to'=>$items['remote_device_id'],
                         'label'=> \LibreNMS\Util\Rewrite::shortenIfType($local_port['ifName']) . ' > ' . \LibreNMS\Util\Rewrite::shortenIfType($remote_port['ifName']),
-                        'title' => generate_port_link($local_port, "<img src='graph.php?type=port_bits&amp;id=" . $items['local_port_id'] . '&amp;from=' . Config::get('time.day') . '&amp;to=' . Config::get('time.now') . '&amp;width=100&amp;height=20&amp;legend=no&amp;bg=' . str_replace('#', '', $row_colour) . "'>\n", '', 0, 1),
+                        'title' => $this->generate_port_link($local_port, "<img src='graph.php?type=port_bits&amp;id=" . $items['local_port_id'] . '&amp;from=' . Config::get('time.day') . '&amp;to=' . Config::get('time.now') . '&amp;width=100&amp;height=20&amp;legend=no&amp;bg=' . str_replace('#', '', $row_colour) . "'>\n", '', 0, 1),
                         'width'=>$width,
                     ],
                     $link_style
