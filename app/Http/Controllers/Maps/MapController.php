@@ -28,6 +28,8 @@ namespace App\Http\Controllers\Maps;
 use App\Http\Controllers\Controller;
 use LibreNMS\Config;
 use LibreNMS\Util\Number;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Permissions;
 
 class MapController extends Controller
 {
