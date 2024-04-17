@@ -28,6 +28,7 @@ namespace App\Http\Controllers\Maps;
 use App\Http\Controllers\Controller;
 use LibreNMS\Config;
 use LibreNMS\Util\Number;
+use LibreNMS\DB\Eloquent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Permissions;
 use App\Facades\DeviceCache;
