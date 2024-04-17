@@ -3643,4 +3643,17 @@ function get_node_edge()
         'links' => $links
     ];
 
+    // return response()->json([
+    //     'status' => 'error',
+    //     'message' => $message,
+    // ], $statusCode, [], JSON_PRETTY_PRINT);
+
+    return response()->json([
+        'nodes' => $nodes, 
+        'edges' => $edges,
+        'device_by_id' => $devices_by_id,
+        'links' => $links
+    ], 200, [], JSON_PRETTY_PRINT);
+
+    echo json_encode($retn);
 }

@@ -163,6 +163,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('netcmd', 'NetCommand@run');
             Route::post('ripe/raw', 'RipeNccApiController@raw');
             Route::get('snmp/capabilities', 'SnmpCapabilities')->name('snmp.capabilities');
+            
+            Route::get('get_topo_raw', 'NodeEdgeTopology@get_raw_topo');
         });
 
         Route::get('settings/list', 'SettingsController@listAll')->name('settings.list');

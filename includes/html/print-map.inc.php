@@ -379,6 +379,9 @@ $('#visualization').height(height + 'px');
     echo $edges; ?>
     ;
 
+    console.log(nodes);
+    console.log(edges);
+
     // create a network
     var container = document.getElementById('visualization');
     var data = {
