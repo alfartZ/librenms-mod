@@ -218,7 +218,7 @@ class MapController extends Controller
      * @deprecated Please use Eloquent instead; https://laravel.com/docs/eloquent
      * @see https://laravel.com/docs/eloquent
      */
-    function dbFetchCell($sql, $parameters = [])
+    protected function dbFetchCell($sql, $parameters = [])
     {
         global $PDO_FETCH_ASSOC;
 
@@ -237,6 +237,11 @@ class MapController extends Controller
 
         return null;
     }//end dbFetchCell()
+
+    protected function dbGenPlaceholders($count)
+    {
+        return '(' . implode(',', array_fill(0, $count, '?')) . ')';
+    }
 
     protected function get_raw_topology()
     {
@@ -258,8 +263,8 @@ class MapController extends Controller
 
         if (! Auth::user()->hasGlobalRead()) {
             $device_ids = Permissions::devicesForUser()->toArray() ?: [0];
-            $sql .= ' AND `D1`.`device_id` IN ' . dbGenPlaceholders(count($device_ids));
-            $sql .= ' AND `D2`.`device_id` IN ' . dbGenPlaceholders(count($device_ids));
+            $sql .= ' AND `D1`.`device_id` IN ' . $this->dbGenPlaceholders(count($device_ids));
+            $sql .= ' AND `D2`.`device_id` IN ' . $this->dbGenPlaceholders(count($device_ids));
             $sql_array = array_merge($sql_array, $device_ids, $device_ids);
         }
 
@@ -485,7 +490,7 @@ class MapController extends Controller
 
             $remote_device_id = $items['remote_device_id'];
             if (! array_key_exists($remote_device_id, $devices_by_id)) {
-                $devices_by_id[$remote_device_id] = ['id'=>$remote_device_id, 'label'=>$this->shorthost(format_hostname($remote_device), 1), 'title'=>generate_device_link($remote_device, '', [], '', '', '', 0), 'shape'=>'box'];
+                $devices_by_id[$remote_device_id] = ['id'=>$remote_device_id, 'label'=>$this->shorthost(format_hostname($remote_device), 1), 'title'=>$this->generate_device_link($remote_device, '', [], '', '', '', 0), 'shape'=>'box'];
                 if ($items['remote_disabled'] != '0') {
                     $devices_by_id[$remote_device_id] = array_merge($devices_by_id[$remote_device_id], $node_disabled_style);
                 } elseif ($items['remote_status'] == '0') {
@@ -579,12 +584,12 @@ class MapController extends Controller
             'links' => $links
         ];
 
-        return response()->json([
-            'nodes' => $nodes, 
-            'edges' => $edges,
-            'device_by_id' => $devices_by_id,
-            'links' => $links
-        ], 200, [], JSON_PRETTY_PRINT);
+        // return response()->json([
+        //     'nodes' => $nodes, 
+        //     'edges' => $edges,
+        //     'device_by_id' => $devices_by_id,
+        //     'links' => $links
+        // ], 200, [], JSON_PRETTY_PRINT);
 
         echo json_encode($retn);
     }
