@@ -271,6 +271,7 @@ Route::prefix('install')->namespace('Install')->group(function () {
 });
 
 // Legacy routes
+Route::get('try/get_topo_raw3', 'LegacyApiController@get_node_edge');
 Route::any('/dummy_legacy_auth/{path?}', 'LegacyController@dummy')->middleware('auth');
 Route::any('/dummy_legacy_unauth/{path?}', 'LegacyController@dummy');
 Route::any('/{path?}', 'LegacyController@index')
