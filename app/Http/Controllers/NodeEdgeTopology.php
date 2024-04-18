@@ -41,10 +41,12 @@ class NodeEdgeTopology extends Controller
         require base_path('/includes/init.php');
         require_once base_path('includes/html/print-map.inc.mod.php');
     }
-
+    
     public function get_raw_topo()
     {
+        $init_modules = ['web', 'alerts'];
         require base_path('/includes/init.php');
+        
         $highlight_node = $vars['highlight_node'] ?? 0;
         $group = $vars['group'] ?? 0;
 
