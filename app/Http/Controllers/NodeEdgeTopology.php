@@ -35,6 +35,13 @@ use App\Facades\DeviceCache;
 
 class NodeEdgeTopology extends Controller
 {
+    public function rawdata()
+    {
+        $init_modules = ['web', 'alerts'];
+        require base_path('/includes/init.php');
+        require_once base_path('includes/html/print-map.inc.mod.php');
+    }
+
     public function get_raw_topo()
     {
         $highlight_node = $vars['highlight_node'] ?? 0;

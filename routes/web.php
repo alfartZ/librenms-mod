@@ -169,7 +169,8 @@ Route::middleware(['auth'])->group(function () {
         
         Route::get('settings/list', 'SettingsController@listAll')->name('settings.list');
         Route::get('try/get_topo_raw', 'NodeEdgeTopology@get_raw_topo');
-        Route::get('try/get_topo_raw2', 'LegacyApiController@get_node_edge');
+        Route::get('try/get_topo_raw2', 'NodeEdgeTopology@rawdata');
+        Route::get('try/get_topo_raw3', 'LegacyApiController@get_node_edge');
 
         // js select2 data controllers
         Route::prefix('select')->namespace('Select')->group(function () {
