@@ -44,6 +44,7 @@ class NodeEdgeTopology extends Controller
 
     public function get_raw_topo()
     {
+        require base_path('/includes/init.php');
         $highlight_node = $vars['highlight_node'] ?? 0;
         $group = $vars['group'] ?? 0;
 
