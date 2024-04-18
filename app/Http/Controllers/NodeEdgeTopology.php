@@ -23,7 +23,7 @@
  * @author     Tony Murray <murraytony@gmail.com>
  */
 
-namespace App\Http\Controllers\Ajax;
+ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use LibreNMS\Config;
