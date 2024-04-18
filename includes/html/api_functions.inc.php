@@ -3303,7 +3303,7 @@ function server_info()
 /**
  * added custom api by @alfartZ
  */
-function get_node_edge()
+function get_node_edge(Illuminate\Http\Request $request)
 {
     $highlight_node = $vars['highlight_node'] ?? 0;
     $group = $vars['group'] ?? 0;
@@ -3648,12 +3648,12 @@ function get_node_edge()
     //     'message' => $message,
     // ], $statusCode, [], JSON_PRETTY_PRINT);
 
-    return response()->json([
-        'nodes' => $nodes, 
-        'edges' => $edges,
-        'device_by_id' => $devices_by_id,
-        'links' => $links
-    ], 200, [], JSON_PRETTY_PRINT);
+    // return response()->json([
+    //     'nodes' => $nodes, 
+    //     'edges' => $edges,
+    //     'device_by_id' => $devices_by_id,
+    //     'links' => $links
+    // ], 200, [], JSON_PRETTY_PRINT);
 
     echo json_encode($retn);
 }
