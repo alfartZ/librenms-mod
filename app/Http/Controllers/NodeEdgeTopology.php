@@ -377,19 +377,13 @@ class NodeEdgeTopology extends Controller
         $edges = json_encode($links);
 
         array_multisort(array_column($devices_by_id, 'label'), SORT_ASC, $devices_by_id);
-        
-        $retrn = [
-            'nodes' => $nodes, 
-            'edges' => $edges,
-            'device_by_id' => $devices_by_id,
-            'links' => $links
-        ];
 
         return response()->json([
             'nodes' => $nodes, 
             'edges' => $edges,
             'device_by_id' => $devices_by_id,
             'links' => $links,
+            'options' => Config::get('network_map_vis_options')
         ], 200, [], JSON_PRETTY_PRINT);
 
         echo json_encode($retn);
