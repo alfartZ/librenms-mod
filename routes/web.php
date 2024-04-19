@@ -91,7 +91,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::get('maps/devicedependency', [DeviceDependencyController::class, 'dependencyMap']);
     
-    Route::get('get_topo_raw', [DeviceDependencyController::class, 'get_raw_topology']);
+    // Route::get('get_topo_raw', [DeviceDependencyController::class, 'get_raw_topology']);
 
     // dashboard
     Route::resource('dashboard', 'DashboardController')->except(['create', 'edit']);
@@ -169,8 +169,8 @@ Route::middleware(['auth'])->group(function () {
         
         Route::get('settings/list', 'SettingsController@listAll')->name('settings.list');
         Route::get('try/get_topo_raw', 'NodeEdgeTopology@get_raw_topo');
-        Route::get('try/get_topo_raw2', 'NodeEdgeTopology@rawdata');
-        Route::get('try/get_topo_raw3', 'LegacyApiController@get_node_edge');
+        // Route::get('try/get_topo_raw2', 'NodeEdgeTopology@rawdata');
+        // Route::get('try/get_topo_raw3', 'LegacyApiController@get_node_edge');
 
         // js select2 data controllers
         Route::prefix('select')->namespace('Select')->group(function () {
@@ -272,7 +272,7 @@ Route::prefix('install')->namespace('Install')->group(function () {
 });
 
 // Legacy routes
-Route::get('try/get_topo_raw3', 'LegacyApiController@get_node_edge');
+// Route::get('try/get_topo_raw3', 'LegacyApiController@get_node_edge');
 Route::any('/dummy_legacy_auth/{path?}', 'LegacyController@dummy')->middleware('auth');
 Route::any('/dummy_legacy_unauth/{path?}', 'LegacyController@dummy');
 Route::any('/{path?}', 'LegacyController@index')
