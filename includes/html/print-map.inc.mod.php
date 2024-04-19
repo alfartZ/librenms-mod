@@ -351,6 +351,7 @@ $retn = [
     'edges' => $edges,
     'devices_by_id' => $devices_by_id,
     'links' => $links,
+    'options' => Config::get('network_map_vis_options');
 ];
 
 echo json_encode($retn);
