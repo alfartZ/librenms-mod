@@ -170,6 +170,10 @@ Route::prefix('v0')->namespace('\App\Api\Controllers')->group(function () {
         Route::get('vlans', 'LegacyApiController@list_vlans')->name('list_vlans');
     });
 
+    Route::prefix('custom-api')->group(function () {
+        Route::get('device/{id}/health', 'LegacyApiController@custom_health_proccessor')->name('custom_health_proccessor');
+    });
+
     Route::get('inventory/{hostname}', 'LegacyApiController@get_inventory')->name('get_inventory');
     Route::get('inventory/{hostname}/all', 'LegacyApiController@get_inventory_for_device')->name('get_inventory_for_device');
 
