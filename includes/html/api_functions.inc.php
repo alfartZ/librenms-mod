@@ -3641,7 +3641,7 @@ function get_raw_topology(Request $request)
         'edges' => $edges,
         'device_by_id' => $devices_by_id,
         'links' => $links,
-        'options' => Config::get('network_map_vis_options')
+        'options' => json_encode(Config::get('network_map_vis_options')),
     ], 200, [], JSON_PRETTY_PRINT);
 
 }
