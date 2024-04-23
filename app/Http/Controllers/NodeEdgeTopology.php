@@ -386,6 +386,5 @@ class NodeEdgeTopology extends Controller
             'options' => Config::get('network_map_vis_options')
         ], 200, [], JSON_PRETTY_PRINT);
 
-        echo json_encode($retn);
     }
 }

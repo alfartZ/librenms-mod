@@ -15,8 +15,6 @@ Route::prefix('v0')->namespace('\App\Api\Controllers')->group(function () {
     Route::get('system', 'LegacyApiController@server_info')->name('server_info');
     Route::get('', 'LegacyApiController@show_endpoints');
 
-    Route::get('get_raw', 'LegacyApiController@get_node_edge');
-
     // global read only access required
     Route::middleware(['can:global-read'])->group(function () {
         Route::get('bgp', 'LegacyApiController@list_bgp')->name('list_bgp');
@@ -171,6 +169,7 @@ Route::prefix('v0')->namespace('\App\Api\Controllers')->group(function () {
     });
 
     Route::prefix('custom-api')->group(function () {
+        Route::get('get_raw_topology', 'LegacyApiController@get_raw_topology')->name('get_raw_topology');
         Route::get('device/{id}/health', 'LegacyApiController@custom_health_proccessor')->name('custom_health_proccessor');
     });
 
