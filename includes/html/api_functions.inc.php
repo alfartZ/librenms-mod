@@ -3696,7 +3696,7 @@ function custom_health_processor(Request $request)
 
 function buildDeviceGraphArrays($device)
 {
-    $device = str_replace('device=', '', $device);
+    // $device = str_replace('device=', '', $device);
     $device = is_numeric($device) ? DeviceCache::get((int) $device) : DeviceCache::getByHostname($device);
     $graph_array = [
         'width' => 150,
