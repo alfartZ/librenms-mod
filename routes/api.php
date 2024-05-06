@@ -171,6 +171,7 @@ Route::prefix('v0')->namespace('\App\Api\Controllers')->group(function () {
     Route::prefix('custom-api')->group(function () {
         Route::get('get_raw_topology', 'LegacyApiController@get_raw_topology')->name('get_raw_topology');
         Route::prefix('health')->group(function () {
+            Route::get('overview/device/{id}', 'LegacyApiController@buildDeviceGraphArrays')->name('buildDeviceGraphArrays');
             Route::get('processor/device/{id}', 'LegacyApiController@custom_health_processor')->name('custom_health_processor');
         });
     });

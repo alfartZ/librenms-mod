@@ -3694,6 +3694,30 @@ function custom_health_processor(Request $request)
 
 }
 
+function buildDeviceGraphArrays($device)
+{
+    $device = str_replace('device=', '', $device);
+    $device = is_numeric($device) ? DeviceCache::get((int) $device) : DeviceCache::getByHostname($device);
+    $graph_array = [
+        'width' => 150,
+        'height' => 45,
+        'device' => $device->device_id,
+        'type' => 'device_bits',
+        'from' => Carbon::now()->subDay()->timestamp,
+        'legend' => 'no',
+        'bg' => 'FFFFFF00',
+    ];
+
+    $graphs = [];
+    foreach (Graph::getOverviewGraphsForDevice($device) as $graph) {
+        $graph_array['type'] = $graph['graph'];
+        $graph_array['popup_title'] = __($graph['text']);
+        $graphs[] = $graph_array;
+    }
+
+    return $graphs;
+}
+
 // Under construction
 function get_graph(Request $request)
 {
