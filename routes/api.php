@@ -170,9 +170,11 @@ Route::prefix('v0')->namespace('\App\Api\Controllers')->group(function () {
 
     Route::prefix('custom-api')->group(function () {
         Route::get('get_raw_topology', 'LegacyApiController@get_raw_topology')->name('get_raw_topology');
-        Route::get('device/{id}/health', 'LegacyApiController@custom_health_proccessor')->name('custom_health_proccessor');
+        Route::prefix('health')->group(function () {
+            Route::get('processor/device/{id}', 'LegacyApiController@custom_health_processor')->name('custom_health_processor');
+        })
     });
-
+    
     Route::get('inventory/{hostname}', 'LegacyApiController@get_inventory')->name('get_inventory');
     Route::get('inventory/{hostname}/all', 'LegacyApiController@get_inventory_for_device')->name('get_inventory_for_device');
 

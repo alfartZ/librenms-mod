@@ -3646,7 +3646,7 @@ function get_raw_topology(Request $request)
 
 }
 
-function custom_health_proccessor(Request $request)
+function custom_health_processor(Request $request)
 {
     $device_id = $request->route('id');
     $i = '1';
@@ -3679,4 +3679,10 @@ function custom_health_proccessor(Request $request)
         echo '</div></div>';
     }//end foreach
 
+}
+
+// Under construction
+function get_graph(Request $request)
+{
+    $img_url = $request->route('img_url');
 }
