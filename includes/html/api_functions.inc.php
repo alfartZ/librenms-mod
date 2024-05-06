@@ -3362,6 +3362,7 @@ function get_raw_topology(Request $request)
                                 `D2`.`hostname` AS `remote_hostname`,
                                 `D2`.`sysName` AS `remote_sysName`,
                                 `D2`.`display` AS `remote_display`,
+                                `D2`.`type` AS `remote_type`,
                                 `P1`.`port_id` AS `local_port_id`,
                                 `P1`.`device_id` AS `local_port_device_id`,
                                 `P1`.`ifName` AS `local_ifname`,
@@ -3414,6 +3415,7 @@ function get_raw_topology(Request $request)
                                 `D2`.`hostname` AS `remote_hostname`,
                                 `D2`.`sysName` AS `remote_sysName`,
                                 `D2`.`display` AS `remote_display`,
+                                `D2`.`type` AS `remote_type`,
                                 `P1`.`port_id` AS `local_port_id`,
                                 `P1`.`device_id` AS `local_port_device_id`,
                                 `P1`.`ifName` AS `local_ifname`,
@@ -3553,7 +3555,12 @@ function get_raw_topology(Request $request)
 
         $remote_device_id = $items['remote_device_id'];
         if (! array_key_exists($remote_device_id, $devices_by_id)) {
-            $devices_by_id[$remote_device_id] = ['id'=>$remote_device_id, 'label'=>shorthost(format_hostname($remote_device), 1), 'title'=>generate_device_link($remote_device, '', [], '', '', '', 0), 'shape'=>'box'];
+            $devices_by_id[$remote_device_id] = [
+                'id'=>$remote_device_id, 
+                'label'=>shorthost(format_hostname($remote_device), 1), 
+                'title'=>generate_device_link($remote_device, '', [], '', '', '', 0), 
+                'shape'=>'box'
+            ];
             if ($items['remote_disabled'] != '0') {
                 $devices_by_id[$remote_device_id] = array_merge($devices_by_id[$remote_device_id], $node_disabled_style);
             } elseif ($items['remote_status'] == '0') {
