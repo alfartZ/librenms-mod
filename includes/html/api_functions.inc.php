@@ -3554,9 +3554,11 @@ function get_raw_topology(Request $request)
         }
 
         $remote_device_id = $items['remote_device_id'];
+        $remote_type = $items['remote_type'];
         if (! array_key_exists($remote_device_id, $devices_by_id)) {
             $devices_by_id[$remote_device_id] = [
                 'id'=>$remote_device_id, 
+                'type'=>$remote_type,
                 'label'=>shorthost(format_hostname($remote_device), 1), 
                 'title'=>generate_device_link($remote_device, '', [], '', '', '', 0), 
                 'shape'=>'box'
