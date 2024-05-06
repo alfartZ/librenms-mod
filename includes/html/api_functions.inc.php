@@ -3354,6 +3354,7 @@ function get_raw_topology(Request $request)
                                 `D1`.`hostname` AS `local_hostname`,
                                 `D1`.`sysName` AS `local_sysName`,
                                 `D1`.`display` AS `local_display`,
+                                `D1`.`type` AS `local_type`,
                                 `D2`.`status` AS `remote_status`,
                                 `D2`.`device_id` AS `remote_device_id`,
                                 `D2`.`disabled` AS `remote_disabled`,
@@ -3405,6 +3406,7 @@ function get_raw_topology(Request $request)
                                 `D1`.`hostname` AS `local_hostname`,
                                 `D1`.`sysName` AS `local_sysName`,
                                 `D1`.`display` AS `local_display`,
+                                `D1`.`type` AS `local_type`,
                                 `D2`.`status` AS `remote_status`,
                                 `D2`.`device_id` AS `remote_device_id`,
                                 `D2`.`disabled` AS `remote_disabled`,
@@ -3529,9 +3531,11 @@ function get_raw_topology(Request $request)
         ];
 
         $local_device_id = $items['local_device_id'];
+        $local_type = $items['local_type'];
         if (! array_key_exists($local_device_id, $devices_by_id)) {
             $devices_by_id[$local_device_id] = [
                 'id'=>$local_device_id,
+                'type'=>$local_type,
                 'label'=>shorthost(format_hostname($local_device), 1),
                 'title'=>generate_device_link($local_device, '', [], '', '', '', 0),
                 'shape'=>'box',
