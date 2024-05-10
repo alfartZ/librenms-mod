@@ -173,6 +173,7 @@ Route::prefix('v0')->namespace('\App\Api\Controllers')->group(function () {
         Route::prefix('health')->group(function () {
             Route::get('overview/device/{id}', 'LegacyApiController@buildDeviceGraphArrays')->name('buildDeviceGraphArrays');
             Route::get('processor/device/{id}', 'LegacyApiController@custom_health_processor')->name('custom_health_processor');
+            Route::get('mempool/device/{id}', 'LegacyApiController@custom_health_mempool')->name('custom_health_mempool');
         });
     });
     

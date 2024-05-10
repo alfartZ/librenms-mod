@@ -3694,11 +3694,15 @@ function custom_health_processor(Request $request)
 
 }
 
-function buildDeviceGraphArrays($device)
+function custom_health_mempool(Request $request)
 {
-    // $device = str_replace('device=', '', $device);
-    $device = is_numeric($device) ? DeviceCache::get((int) $device) : DeviceCache::getByHostname($device);
-    return $device;
+    include "includes/html/pages/device/health/mempool.inc.php";
+}
+
+function buildDeviceGraphArrays(Request $request)
+{
+    $device_id = $request->route('device_id');
+    $device = is_numeric($device_id) ? DeviceCache::get((int) $device_id) : DeviceCache::getByHostname($device_id);
     $graph_array = [
         'width' => 150,
         'height' => 45,
