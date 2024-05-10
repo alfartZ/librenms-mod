@@ -3745,8 +3745,6 @@ function generate_graph_by_url(Request $request)
         "out" => $request->query('out', null),
         "float_precision" => $request->query('float_precision', null),
     ];
-    
-    return response()->json([
-        'vars' => $vars, 
-    ], 200, [], JSON_PRETTY_PRINT);
+
+    require \LibreNMS\Config::get('install_dir') . '/includes/html/graphs/graph.inc.php';
 }
