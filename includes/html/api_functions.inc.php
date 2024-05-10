@@ -3730,12 +3730,22 @@ function generate_graph_by_url(Request $request)
 {
     // graph-data?id=123&type=processor_usage&height=100&width=215&from=1683818700
     $vars = [
+        "device" => $request->query('device', null),
         "id" => $request->query('id', null),
         "type" => $request->query('type', null),
+        "subtype" => $request->query('subtype', null),
         "height" => $request->query('height', null),
         "width" => $request->query('width', null),
         "from" => $request->query('from', null),
-    ]
+        "to" => $request->query('to', null),
+        "period" => $request->query('period', null),
+        "prev_from" => $request->query('prev_from', null),
+        "inverse" => $request->query('inverse', null),
+        "in" => $request->query('in', null),
+        "out" => $request->query('out', null),
+        "float_precision" => $request->query('float_precision', null),
+    ];
+    
     return response()->json([
         'vars' => $vars, 
     ], 200, [], JSON_PRETTY_PRINT);
