@@ -45,6 +45,8 @@ use LibreNMS\Util\IP;
 use LibreNMS\Util\IPv4;
 use LibreNMS\Util\Mac;
 use LibreNMS\Util\Number;
+use LibreNMS\Data\Graphing\GraphParameters;
+use LibreNMS\Enum\ImageFormat;
 
 function api_success($result, $result_name, $message = null, $code = 200, $count = null, $extra = null): JsonResponse
 {
@@ -3724,7 +3726,23 @@ function buildDeviceGraphArrays(Request $request)
 }
 
 // Under construction
-function get_graph(Request $request)
+function generate_graph_by_url(Request $request)
 {
-    $img_url = $request->route('img_url');
+    $vars = [
+        "device" => $request->query('device', null),
+        "type" => $request->query('type', null),
+        "subtype" => $request->query('subtype', null),
+        "height" => $request->query('height', null),
+        "width" => $request->query('width', null),
+        "from" => $request->query('from', null),
+        "to" => $request->query('to', null),
+        "period" => $request->query('period', null),
+        "prev_from" => $request->query('prev_from', null),
+        "inverse" => $request->query('inverse', null),
+        "in" => $request->query('in', null),
+        "out" => $request->query('out', null),
+        "float_precision" => $request->query('float_precision', null),
+    ]
+
+    require \LibreNMS\Config::get('install_dir') . '/includes/html/graphs/graph.inc.php';
 }
