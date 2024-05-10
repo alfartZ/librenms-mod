@@ -3701,7 +3701,7 @@ function custom_health_mempool(Request $request)
 
 function buildDeviceGraphArrays(Request $request)
 {
-    $device_id = $request->route('device_id');
+    $device_id = $request->route('id');
     $device = is_numeric($device_id) ? DeviceCache::get((int) $device_id) : DeviceCache::getByHostname($device_id);
     $graph_array = [
         'width' => 150,
