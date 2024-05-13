@@ -3762,7 +3762,8 @@ function show_health(Request $request)
     // $device = [
     //     "device_id" => $vars['device']
     // ];
-    $device = DeviceCache::get((int) $vars['device']);
+    $device = ctype_digit($hostname) ? Device::find($hostname) : Device::findByHostname($hostname);
+    // $device = DeviceCache::get((int) $vars['device']);
     var_dump($device);
     
     unset($datas);
