@@ -3754,7 +3754,8 @@ function show_health(Request $request)
         "device" => $request->query('device', 1),
         "metric" => $request->query('metric', "processor")
     ]; 
-    "content" => require \LibreNMS\Config::get('install_dir') . "/includes/html/pages/device/health.inc.php";
+    
+    require \LibreNMS\Config::get('install_dir') . "/includes/html/pages/device/health.inc.php";
     
     // $metric = basename($vars['metric']);
     // return response()->json([
