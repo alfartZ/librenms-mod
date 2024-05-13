@@ -3754,17 +3754,21 @@ function show_health(Request $request)
         "device" => $request->query('device', 1),
         "metric" => $request->query('metric', "processor")
     ]; 
+    "content" => require \LibreNMS\Config::get('install_dir') . "/includes/html/pages/device/health.inc.php"
     
-    $metric = basename($vars['metric']);
-    if (is_file("includes/html/pages/device/health/$metric.inc.php")) {
-        require \LibreNMS\Config::get('install_dir') . "/includes/html/pages/device/health/$metric.inc.php";
-        return response()->json([
-            "msg" => "$metric",
-            "content" => require \LibreNMS\Config::get('install_dir') . "/includes/html/pages/device/health/$metric.inc.php"
-        ], 200, [], JSON_PRETTY_PRINT);
-    } else {
-        return response()->json([
-            "msg" => "metrics not found",
-        ], 404, [], JSON_PRETTY_PRINT);
-    }
+    // $metric = basename($vars['metric']);
+    // return response()->json([
+    //     "msg" => "$metric",
+    // ], 200, [], JSON_PRETTY_PRINT);
+    // if (is_file("includes/html/pages/device/health/$metric.inc.php")) {
+    //     require \LibreNMS\Config::get('install_dir') . "/includes/html/pages/device/health/$metric.inc.php";
+    //     return response()->json([
+    //         "msg" => "$metric",
+    //         "content" => require \LibreNMS\Config::get('install_dir') . "/includes/html/pages/device/health/$metric.inc.php"
+    //     ], 200, [], JSON_PRETTY_PRINT);
+    // } else {
+    //     return response()->json([
+    //         "msg" => "metrics not found",
+    //     ], 404, [], JSON_PRETTY_PRINT);
+    // }
 }
