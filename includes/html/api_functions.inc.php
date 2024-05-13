@@ -3816,6 +3816,8 @@ function show_health(Request $request)
     $type_text['storage'] = 'Disk Usage';
     $type_text['diskio'] = 'Disk I/O';
 
+    echo "<div class='data-type' data-metric='". json_encode($type_text) ."'></div>";
+
     $link_array = [
         'page' => 'device',
         'device' => $device['device_id'],
@@ -3863,7 +3865,6 @@ function show_health(Request $request)
     return response()->json([
         "msg" => "$metric",
         "vars" => $vars,
-        ""
     ], 200, [], JSON_PRETTY_PRINT);
     
     // $metric = basename($vars['metric']);
