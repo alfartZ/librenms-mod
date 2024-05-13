@@ -3757,10 +3757,14 @@ function show_health(Request $request)
     
     $metric = basename($vars['metric']);
     if (is_file("includes/html/pages/device/health/$metric.inc.php")) {
-        require "includes/html/pages/device/health/$metric.inc.php";
+        require \LibreNMS\Config::get('install_dir') . "/includes/html/pages/device/health/$metric.inc.php";
+        return response()->json([
+            "msg" => "$metric",
+            "content" => require \LibreNMS\Config::get('install_dir') . "/includes/html/pages/device/health/$metric.inc.php"
+        ], 200, [], JSON_PRETTY_PRINT);
     } else {
         return response()->json([
             "msg" => "metrics not found",
-        ], 200, [], JSON_PRETTY_PRINT);
+        ], 404, [], JSON_PRETTY_PRINT);
     }
 }
