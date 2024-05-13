@@ -3816,7 +3816,36 @@ function show_health(Request $request)
     $type_text['storage'] = 'Disk Usage';
     $type_text['diskio'] = 'Disk I/O';
 
-    var_dump($type_text);
+    $link_array = [
+        'page' => 'device',
+        'device' => $device['device_id'],
+        'tab' => 'health',
+    ];
+    
+    print_optionbar_start();
+    
+    echo "<span style='font-weight: bold;'>Health</span> &#187; ";
+    
+    if (empty($vars['metric'])) {
+        $vars['metric'] = 'overview';
+    }
+    
+    $sep = '';
+    foreach ($datas as $type) {
+        echo $sep;
+        if ($vars['metric'] == $type) {
+            echo '<span class="pagemenu-selected">';
+        }
+    
+        echo generate_link($type_text[$type], $link_array, ['metric' => $type]);
+        if ($vars['metric'] == $type) {
+            echo '</span>';
+        }
+    
+        $sep = ' | ';
+    }
+    
+    print_optionbar_end();
 
     $metric = basename($vars['metric']);
     if (is_file("includes/html/pages/device/health/$metric.inc.php")) {
@@ -3833,7 +3862,8 @@ function show_health(Request $request)
 
     return response()->json([
         "msg" => "$metric",
-        "vars" => $vars
+        "vars" => $vars,
+        ""
     ], 200, [], JSON_PRETTY_PRINT);
     
     // $metric = basename($vars['metric']);
