@@ -3793,7 +3793,6 @@ function show_health(Request $request)
         $datas[] = 'diskio';
     }
 
-    var_dump($datas);
 
     $sensors = [
         'airflow', 'ber', 'bitrate', 'charge', 'chromatic_dispersion', 'cooling', 'count', 'current', 'dBm', 'delay', 'eer',
@@ -3809,6 +3808,15 @@ function show_health(Request $request)
             $type_text[$lowname] = trans('sensors.' . $lowname . '.short');
         }
     }
+
+    $type_text['overview'] = 'Overview';
+    $type_text['qfp'] = 'QFP';
+    $type_text['processor'] = 'Processor';
+    $type_text['mempool'] = 'Memory';
+    $type_text['storage'] = 'Disk Usage';
+    $type_text['diskio'] = 'Disk I/O';
+
+    var_dump($type_text);
 
     $metric = basename($vars['metric']);
     if (is_file("includes/html/pages/device/health/$metric.inc.php")) {
