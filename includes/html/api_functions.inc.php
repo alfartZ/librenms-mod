@@ -3758,7 +3758,7 @@ function show_health(Request $request)
     $metric = $vars['metric'];
     
     // include "includes/html/pages/device/health/$metric.inc.php";
-    require "includes/html/pages/device/health.inc.php";
+    include "includes/html/pages/device/health.inc.php";
     
     // $metric = basename($vars['metric']);
     // return response()->json([
