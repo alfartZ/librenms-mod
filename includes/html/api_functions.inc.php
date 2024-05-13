@@ -3761,7 +3761,6 @@ function show_health(Request $request)
 
     $hostname = $vars['device'];
     $device = ctype_digit($hostname) ? Device::find($hostname)->toArray() : Device::findByHostname($hostname)->toArray();
-    var_dump($device);
     
     $qfp = 0;
     if ($device['os_group'] == 'cisco') {
@@ -3793,6 +3792,8 @@ function show_health(Request $request)
     if (DiskIo::where('device_id', $device['device_id'])->count()) {
         $datas[] = 'diskio';
     }
+
+    var_dump($datas);
 
     $sensors = [
         'airflow', 'ber', 'bitrate', 'charge', 'chromatic_dispersion', 'cooling', 'count', 'current', 'dBm', 'delay', 'eer',
