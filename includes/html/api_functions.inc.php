@@ -3756,7 +3756,8 @@ function show_health(Request $request)
     ]; 
     
     $metric = $vars['metric'];
-    include \LibreNMS\Config::get('install_dir') . "/includes/html/pages/device/health/$metric.inc.php";
+    
+    require "/includes/html/pages/device/health/$metric.inc.php";
     
     // $metric = basename($vars['metric']);
     // return response()->json([
