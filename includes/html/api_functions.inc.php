@@ -3745,6 +3745,22 @@ function generate_graph_by_url(Request $request)
         "out" => $request->query('out', null),
         "float_precision" => $request->query('float_precision', null),
     ];
-
     require \LibreNMS\Config::get('install_dir') . '/includes/html/graphs/graph.inc.php';
+}
+
+function show_health(Request $request)
+{
+    $vars = [
+        "device" => $request->query('device', 1),
+        "metric" => $request->query('metric', "processor")
+    ]; 
+    
+    $metric = basename($vars['metric']);
+    if (is_file("includes/html/pages/device/health/$metric.inc.php")) {
+        require "includes/html/pages/device/health/$metric.inc.php";
+    } else {
+        return response()->json([
+            "msg" => "metrics not found",
+        ], 200, [], JSON_PRETTY_PRINT);
+    }
 }
