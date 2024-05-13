@@ -3760,7 +3760,7 @@ function show_health(Request $request)
     ]; 
 
     $hostname = $vars['device'];
-    $device = ctype_digit($hostname) ? Device::find($hostname) : Device::findByHostname($hostname);
+    $device = ctype_digit($hostname) ? Device::find($hostname)->toArray() : Device::findByHostname($hostname)->toArray();
     var_dump($device);
     
     $qfp = 0;
