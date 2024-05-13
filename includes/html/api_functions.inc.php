@@ -3837,10 +3837,10 @@ function show_health(Request $request)
         }
     }
 
-    return response()->json([
-        "msg" => "$metric",
-        "vars" => $vars,
-    ], 200, [], JSON_PRETTY_PRINT);
+    // return response()->json([
+    //     "msg" => "$metric",
+    //     "vars" => $vars,
+    // ], 200, [], JSON_PRETTY_PRINT);
     
     // $metric = basename($vars['metric']);
     // return response()->json([
