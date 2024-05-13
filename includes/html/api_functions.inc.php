@@ -25,9 +25,13 @@ use App\Models\PollerGroup;
 use App\Models\Port;
 use App\Models\PortGroup;
 use App\Models\PortsFdb;
-use App\Models\Sensor;
 use App\Models\ServiceTemplate;
 use App\Models\UserPref;
+use App\Models\DiskIo;
+use App\Models\Mempool;
+use App\Models\Processor;
+use App\Models\Sensor;
+use App\Models\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -3759,10 +3763,42 @@ function show_health(Request $request)
         "device_id" => $vars['device']
     ];
     
-    // $metric = $vars['metric'];
+    unset($datas);
+    $datas[] = 'overview';
     
-    // include "includes/html/pages/device/health/$metric.inc.php";
-    include "includes/html/pages/device/health.inc.php";
+    if (Processor::where('device_id', $device['device_id'])->count()) {
+        $datas[] = 'processor';
+    }
+    
+    if ($qfp) {
+        $datas[] = 'qfp';
+    }
+    
+    if (Mempool::where('device_id', $device['device_id'])->count()) {
+        $datas[] = 'mempool';
+    }
+    
+    if (Storage::where('device_id', $device['device_id'])->count()) {
+        $datas[] = 'storage';
+    }
+    
+    if (DiskIo::where('device_id', $device['device_id'])->count()) {
+        $datas[] = 'diskio';
+    }
+
+    $metric = $vars['metric'];
+    $metric = basename($vars['metric']);
+    if (is_file("includes/html/pages/device/health/$metric.inc.php")) {
+        include "includes/html/pages/device/health/$metric.inc.php";
+    } else {
+        foreach ($datas as $type) {
+            if ($type != 'overview') {
+                $graph_title = $type_text[$type];
+                $graph_array['type'] = 'device_' . $type;
+                include 'includes/html/print-device-graph.php';
+            }
+        }
+    }
 
     return response()->json([
         "msg" => "$metric",

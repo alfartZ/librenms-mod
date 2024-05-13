@@ -86,8 +86,6 @@ $type_text['mempool'] = 'Memory';
 $type_text['storage'] = 'Disk Usage';
 $type_text['diskio'] = 'Disk I/O';
 
-var_dump($type_text);
-
 $link_array = [
     'page' => 'device',
     'device' => $device['device_id'],
