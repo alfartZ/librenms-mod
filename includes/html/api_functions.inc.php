@@ -3754,8 +3754,12 @@ function show_health(Request $request)
         "device" => $request->query('device', 1),
         "metric" => $request->query('metric', "processor")
     ]; 
+
+    $device = [
+        "device_id" => $vars['device']
+    ];
     
-    $metric = $vars['metric'];
+    // $metric = $vars['metric'];
     
     // include "includes/html/pages/device/health/$metric.inc.php";
     include "includes/html/pages/device/health.inc.php";
