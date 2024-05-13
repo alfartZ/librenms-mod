@@ -3823,31 +3823,6 @@ function show_health(Request $request)
         'device' => $device['device_id'],
         'tab' => 'health',
     ];
-    
-    print_optionbar_start();
-    
-    echo "<span style='font-weight: bold;'>Health</span> &#187; ";
-    
-    if (empty($vars['metric'])) {
-        $vars['metric'] = 'overview';
-    }
-    
-    $sep = '';
-    foreach ($datas as $type) {
-        echo $sep;
-        if ($vars['metric'] == $type) {
-            echo '<span class="pagemenu-selected">';
-        }
-    
-        echo generate_link($type_text[$type], $link_array, ['metric' => $type]);
-        if ($vars['metric'] == $type) {
-            echo '</span>';
-        }
-    
-        $sep = ' | ';
-    }
-    
-    print_optionbar_end();
 
     $metric = basename($vars['metric']);
     if (is_file("includes/html/pages/device/health/$metric.inc.php")) {
