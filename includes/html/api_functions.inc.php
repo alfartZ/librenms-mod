@@ -3759,9 +3759,11 @@ function show_health(Request $request)
         "metric" => $request->query('metric', "processor")
     ]; 
 
-    $device = [
-        "device_id" => $vars['device']
-    ];
+    // $device = [
+    //     "device_id" => $vars['device']
+    // ];
+    $device = DeviceCache::get((int) $vars['device']);
+    var_dump($device);
     
     unset($datas);
     $datas[] = 'overview';
