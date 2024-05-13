@@ -3760,11 +3760,17 @@ function show_health(Request $request)
     ]; 
 
     $hostname = $vars['device'];
-
     $device = ctype_digit($hostname) ? Device::find($hostname) : Device::findByHostname($hostname);
-    // $device = DeviceCache::get((int) $vars['device']);
     var_dump($device);
     
+    $qfp = 0;
+    if ($device['os_group'] == 'cisco') {
+        $component = new LibreNMS\Component();
+        $components = $component->getComponents($device['device_id'], ['type' => 'cisco-qfp']);
+        $components = $components[$device['device_id']];
+        $qfp = isset($components) ? count($components) : 0;
+    }
+
     unset($datas);
     $datas[] = 'overview';
     
@@ -3788,7 +3794,21 @@ function show_health(Request $request)
         $datas[] = 'diskio';
     }
 
-    $metric = $vars['metric'];
+    $sensors = [
+        'airflow', 'ber', 'bitrate', 'charge', 'chromatic_dispersion', 'cooling', 'count', 'current', 'dBm', 'delay', 'eer',
+        'fanspeed', 'frequency', 'humidity', 'load', 'loss', 'percent', 'power', 'power_consumed', 'power_factor', 'pressure',
+        'runtime', 'signal', 'snr', 'state', 'temperature', 'tv_signal', 'voltage', 'waterflow', 'quality_factor',
+    ];
+    
+    foreach ($sensors as $sensor_name) {
+        if (Sensor::where('sensor_class', $sensor_name)->where('device_id', $device['device_id'])->count()) {
+            //strtolower because 'dBm - dbm' difference
+            $lowname = strtolower($sensor_name);
+            $datas[] = $lowname;
+            $type_text[$lowname] = trans('sensors.' . $lowname . '.short');
+        }
+    }
+
     $metric = basename($vars['metric']);
     if (is_file("includes/html/pages/device/health/$metric.inc.php")) {
         include "includes/html/pages/device/health/$metric.inc.php";
