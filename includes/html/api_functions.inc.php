@@ -3759,6 +3759,11 @@ function show_health(Request $request)
     
     // include "includes/html/pages/device/health/$metric.inc.php";
     include "includes/html/pages/device/health.inc.php";
+
+    return response()->json([
+        "msg" => "$metric",
+        "vars" => $vars
+    ], 200, [], JSON_PRETTY_PRINT);
     
     // $metric = basename($vars['metric']);
     // return response()->json([
