@@ -3863,7 +3863,9 @@ function show_graph(Request $request)
 {
     $vars = [
         "device" => $request->query('device', 1),
-        "group" => $request->query('group', "overview")
+        "group" => $request->query('group', "availability"),
+        "page" => $request->query('page', "device"),
+        "tab" => $request->query('tab', "graphs"),
     ]; 
 
     $hostname = $vars['device'];
@@ -3886,6 +3888,7 @@ function show_graph(Request $request)
         }
     }
 
+    var_dump($graph_enable);
     $sep = '';
     foreach ($graph_enable as $section => $nothing) {
         if (isset($graph_enable) && is_array($graph_enable[$section])) {
@@ -3916,6 +3919,7 @@ function show_graph(Request $request)
     $group = $vars['group'] ?? array_key_first($graph_enable);
     $graph_enable = $graph_enable[$group] ?? [];
 
+    var_dump($graph_enable);
     if (($group != 'customoid') && is_file("includes/html/pages/device/graphs/$group.inc.php")) {
         include "includes/html/pages/device/graphs/$group.inc.php";
     } else {
