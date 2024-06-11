@@ -172,6 +172,7 @@ Route::prefix('v0')->namespace('\App\Api\Controllers')->group(function () {
         Route::get('get_raw_topology', 'LegacyApiController@get_raw_topology')->name('get_raw_topology');
         Route::get('graph_data', 'LegacyApiController@generate_graph_by_url')->name('generate_graph_by_url');
         Route::get('show_health', 'LegacyApiController@show_health')->name('show_health');
+        Route::get('show_graph', 'LegacyApiController@show_graph')->name('show_graph');
         Route::prefix('health')->group(function () {
             Route::get('overview/device/{id}', 'LegacyApiController@buildDeviceGraphArrays')->name('buildDeviceGraphArrays');
             Route::get('processor/device/{id}', 'LegacyApiController@custom_health_processor')->name('custom_health_processor');

@@ -3861,6 +3861,10 @@ function show_health(Request $request)
 
 function show_graph(Request $request)
 {
+    $vars = [
+        "device" => $request->query('device', 1),
+        "group" => $request->query('group', "overview")
+    ]; 
     // Graphs are printed in the order they exist in \LibreNMS\Config::get('graph_types')
     $link_array = [
         'page' => 'device',
@@ -3904,5 +3908,34 @@ function show_graph(Request $request)
         }
     }
     unset($sep);
+
+    $group = $vars['group'] ?? array_key_first($graph_enable);
+    $graph_enable = $graph_enable[$group] ?? [];
+
+    if (($group != 'customoid') && is_file("includes/html/pages/device/graphs/$group.inc.php")) {
+        include "includes/html/pages/device/graphs/$group.inc.php";
+    } else {
+        foreach ($graph_enable as $graph => $entry) {
+            $graph_array = [];
+            if ($graph_enable[$graph]) {
+                if ($graph == 'customoid') {
+                    foreach (dbFetchRows('SELECT * FROM `customoids` WHERE `device_id` = ? ORDER BY `customoid_descr`', [$device['device_id']]) as $graph_entry) {
+                        $graph_title = \LibreNMS\Config::get("graph_types.device.$graph.descr") . ': ' . $graph_entry['customoid_descr'];
+                        $graph_array['type'] = 'customoid_' . $graph_entry['customoid_descr'];
+                        if (! empty($graph_entry['customoid_unit'])) {
+                            $graph_array['unit'] = $graph_entry['customoid_unit'];
+                        } else {
+                            $graph_array['unit'] = 'value';
+                        }
+                        include 'includes/html/print-device-graph.php';
+                    }
+                } else {
+                    $graph_title = \LibreNMS\Config::get("graph_types.device.$graph.descr");
+                    $graph_array['type'] = 'device_' . $graph;
+                    include 'includes/html/print-device-graph.php';
+                }
+            }
+        }
+    }
 
 }
