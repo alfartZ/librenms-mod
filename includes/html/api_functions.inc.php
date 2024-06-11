@@ -3920,6 +3920,8 @@ function show_graph(Request $request)
     $graph_enable = $graph_enable[$group] ?? [];
 
     var_dump($graph_enable);
+    echo "<br>";
+    var_dump($vars);
     if (($group != 'customoid') && is_file("includes/html/pages/device/graphs/$group.inc.php")) {
         include "includes/html/pages/device/graphs/$group.inc.php";
     } else {
