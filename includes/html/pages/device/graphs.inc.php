@@ -1,6 +1,7 @@
 <?php
 
 // Graphs are printed in the order they exist in \LibreNMS\Config::get('graph_types')
+var_dump($vars);
 $link_array = [
     'page' => 'device',
     'device' => $device['device_id'],
