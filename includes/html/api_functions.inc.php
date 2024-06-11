@@ -3865,6 +3865,10 @@ function show_graph(Request $request)
         "device" => $request->query('device', 1),
         "group" => $request->query('group', "overview")
     ]; 
+
+    $hostname = $vars['device'];
+    $device = ctype_digit($hostname) ? Device::find($hostname)->toArray() : Device::findByHostname($hostname)->toArray();
+
     // Graphs are printed in the order they exist in \LibreNMS\Config::get('graph_types')
     $link_array = [
         'page' => 'device',
