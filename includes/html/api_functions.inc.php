@@ -3923,7 +3923,10 @@ function show_graph(Request $request)
     echo "<br>";
     var_dump($vars);
     if (($group != 'customoid') && is_file("includes/html/pages/device/graphs/$group.inc.php")) {
-        include "includes/html/pages/device/graphs/$group.inc.php";
+        $incs = "includes/html/pages/device/graphs/$group.inc.php";
+        echo "<h1> $incs </h1>"
+        // include "includes/html/pages/device/graphs/$group.inc.php";
+        include $incs;
     } else {
         foreach ($graph_enable as $graph => $entry) {
             $graph_array = [];
