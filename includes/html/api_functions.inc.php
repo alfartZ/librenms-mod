@@ -3869,7 +3869,7 @@ function show_graph(Request $request)
     ]; 
 
     $hostname = $vars['device'];
-    $device = is_numeric($device) ? DeviceCache::get((int) $device) : DeviceCache::getByHostname($device);
+    $device = ctype_digit($hostname) ? Device::find($hostname)->toArray() : Device::findByHostname($hostname)->toArray();
 
     // Graphs are printed in the order they exist in \LibreNMS\Config::get('graph_types')
     $link_array = [
@@ -3896,10 +3896,11 @@ function show_graph(Request $request)
     echo "<hr>";
     var_dump($vars);
     if (($group != 'customoid') && is_file("includes/html/pages/device/graphs/$group.inc.php")) {
+        $device = is_numeric($device) ? DeviceCache::get((int) $device) : DeviceCache::getByHostname($device);
         $incs = "includes/html/pages/device/graphs/$group.inc.php";
         echo "<h1> $incs </h1>";
-        // include "includes/html/pages/device/graphs/$group.inc.php";
-        include $incs;
+        include "includes/html/pages/device/graphs/$group.inc.php";
+        // include $incs;
     } else {
         foreach ($graph_enable as $graph => $entry) {
             $graph_array = [];
