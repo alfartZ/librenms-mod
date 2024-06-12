@@ -3869,7 +3869,7 @@ function show_graph(Request $request)
     ]; 
 
     $hostname = $vars['device'];
-    $device = ctype_digit($hostname) ? Device::find($hostname)->toArray() : Device::findByHostname($hostname)->toArray();
+    $device = is_numeric($device) ? DeviceCache::get((int) $device) : DeviceCache::getByHostname($device);
 
     // Graphs are printed in the order they exist in \LibreNMS\Config::get('graph_types')
     $link_array = [
@@ -3888,39 +3888,12 @@ function show_graph(Request $request)
         }
     }
 
-    var_dump($graph_enable);
-    $sep = '';
-    foreach ($graph_enable as $section => $nothing) {
-        if (isset($graph_enable) && is_array($graph_enable[$section])) {
-            $type = strtolower($section);
-            if (empty($vars['group'])) {
-                $vars['group'] = $type;
-            }
-
-            echo $sep;
-            if ($vars['group'] == $type) {
-                echo '<span class="pagemenu-selected">';
-            }
-
-            if ($type == 'customoid') {
-                echo generate_link(ucwords('Custom OID'), $link_array, ['group' => $type]);
-            } else {
-                echo generate_link(ucwords($type), $link_array, ['group' => $type]);
-            }
-            if ($vars['group'] == $type) {
-                echo '</span>';
-            }
-
-            $sep = ' | ';
-        }
-    }
-    unset($sep);
+    echo "<div class='data-type' data-group='". json_encode($graph_enable) ."'></div>";
 
     $group = $vars['group'] ?? array_key_first($graph_enable);
     $graph_enable = $graph_enable[$group] ?? [];
 
-    var_dump($graph_enable);
-    echo "<br>";
+    echo "<hr>";
     var_dump($vars);
     if (($group != 'customoid') && is_file("includes/html/pages/device/graphs/$group.inc.php")) {
         $incs = "includes/html/pages/device/graphs/$group.inc.php";
