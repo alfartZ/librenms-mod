@@ -3963,7 +3963,7 @@ function trigger_auto_discovery(Request $request)
     $proc = new \Symfony\Component\Process\Process($cmd);
     $proc->setTimeout(Config::get('snmp.exec_timeout', 1200));
 
-    if ($_GET['format'] == 'text') {
+    if ($vars['format'] == 'text') {
         header('Content-type: text/plain');
         header('X-Accel-Buffering: no');
 
@@ -3972,7 +3972,7 @@ function trigger_auto_discovery(Request $request)
             ob_flush();
             flush(); // you have to flush buffer
         });
-    } elseif ($_GET['format'] == 'download') {
+    } elseif ($vars['format'] == 'download') {
         $proc->run();
         $output = $proc->getOutput();
 
