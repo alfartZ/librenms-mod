@@ -3931,11 +3931,13 @@ function trigger_auto_discovery(Request $request)
 {
     $vars = [
         "device" => $request->query('device', 25),
+        "ip_search" => $request->query('ip', "10.29.1.0/24"),
         "type" => $request->query('type', "discovery"),
         "format" => $request->query('format', "text")
     ]; 
 
     $hostname = $vars['device'];
+    $ip_search = $vars['ip_search'];
     $type = $vars['type'];
 
     switch ($type) {
@@ -3954,6 +3956,13 @@ function trigger_auto_discovery(Request $request)
             $cmd = ['php', \LibreNMS\Config::get('install_dir') . '/discovery.php', '-h', $hostname, '-d'];
             $filename = "discovery-$hostname.txt";
             break;
+        case 'snmp_scan':
+            // python3 snmp-scan.py -r 10.29.1.0/24 -v
+            $cmd = ['python', \LibreNMS\Config::get('install_dir') . '/snmp-scan.py', '-r', $ip_search, '-v'];
+            $ip = explode("/", $ip_search)[0]
+            $filename = "snmp-$ip.txt";
+            break;
+            
         default:
             echo 'You must specify a valid type';
             exit;
