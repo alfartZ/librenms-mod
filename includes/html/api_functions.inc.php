@@ -3959,7 +3959,7 @@ function trigger_auto_discovery(Request $request)
         case 'snmp_scan':
             // python3 snmp-scan.py -r 10.29.1.0/24 -v
             $cmd = ['python3', \LibreNMS\Config::get('install_dir') . '/snmp-scan.py', '-r', $ip_search, '-v'];
-            $ip = explode("/", $ip_search)[0]
+            $ip = explode("/", $ip_search)[0];
             $filename = "snmp-$ip.txt";
             break;
             
